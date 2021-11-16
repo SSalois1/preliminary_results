@@ -1088,6 +1088,7 @@ Anova(aov5.3, type = &#39;III&#39;)</code></pre>
 </div>
 <div id="determine-the-number-of-decaying-rings-in-the-region-in-good-vs-poor-years" class="section level2">
 <h2>Determine the number of decaying rings in the region in good vs poor years</h2>
+<p>Silva_ea_20 found that WCRs are most productive during their decaying stage. If WCRs have the potential to be a food aggregation resource or serve as a hotspot for productivity, I hypothesized that <em>Good</em> years may be associated with a greater number of ‘decaying’ rings.</p>
 <pre class="r"><code># Determine the number of decaying rings in the region in good v poor years
 num_decay &lt;- demise_fs %&gt;%
   group_by(year,week, score) %&gt;%
@@ -1171,6 +1172,7 @@ Anova(aov6.2, type = &#39;III&#39;)</code></pre>
 ## week         0.213   1  0.4018 0.5274
 ## year:week    0.214   1  0.4040 0.5263
 ## Residuals   61.385 116</code></pre>
+<p>There is <strong>no</strong> significant difference in the number of decaying rings in Good vs Bad years. **NOTE I calculated number of ‘decaying’ rings as the sum of the rings that were in their last week of existence (last week of their tracking timeline). I am not sure if this is the best way to do this - is there a known trajectory/decay rate taht is a better way to quantify this?</p>
 </div>
 <div id="visualize-rings-born-in-zone-2-demised-in-zone-1" class="section level2">
 <h2>Visualize: Rings born in Zone 2, Demised in Zone 1</h2>
