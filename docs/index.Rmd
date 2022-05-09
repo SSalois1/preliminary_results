@@ -12,3 +12,6 @@ output: html_document
   
   
 <a href="https://ssalois1.github.io/preliminary_results/analyze_pulse_with_env.html" target="_blank"> CPUE and Oceanographic Variable Modeling - Nov 9 2021 </a>  
+
+<a href="https://ssalois1.github.io/preliminary_results/vis_phyto_size_class.html" target="_blank"> Explore phytoplankton size class data - May 9 2022 </a>
+ 
