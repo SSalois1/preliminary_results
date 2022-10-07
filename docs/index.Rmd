@@ -23,3 +23,6 @@ output: html_document
  
  <a href="https://ssalois1.github.io/preliminary_results/view_weekly_indicators.html" target="_blank"> Illex Indicator Viewer </a>
  
+ 
+ <a href="https://ssalois1.github.io/preliminary_results/sirates_2022_data_viz.html" target="_blank"> SIRATES 2022 </a>
+  
