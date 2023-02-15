@@ -274,7 +274,8 @@ setwd(here::here(&#39;data/ilxsm&#39;))
 # Note the previous version was &#39;ILXSM_Pull_01_25_23.csv&#39;
 # Most updated data from Thomas on 2/14/23
 lw_data &lt;- read.csv(&#39;Entire_Database_Pull_ILXSM_2.14.23.csv&#39;)</code></pre>
-<p>Next step is to wrangle the data a bit to include date variables of interest and identify the unique stat areas that are in this file. Stat areas listed as 000 or 600 represent mixed areas. AREA_CODE == 000 is all stat areas. The 600 series are AREA_CODE identified from 601 to 699. At this point in time AREA_CODE = 639 is the largest at the moment. The micro level series end in tenths. Example #1: 610, 620 630, ect. Example #2: The 610 series is comprised of stat areas 611:619. ***</p>
+<p>Next step is to wrangle the data a bit to include date variables of interest and identify the unique stat areas that are in this file.</p>
+<hr />
 <blockquote>
 <p>The <strong>unique</strong> statistical areas in this set are as follows:</p>
 </blockquote>
@@ -289,8 +290,14 @@ unique_areas &lt;- sort(unique(lw_data$AREA_CODE))
 unique_areas</code></pre>
 <pre><code>##  [1]   0 500 526 534 537 541 562 600 610 615 616 620 621 622 623 624 626 631 632
 ## [20] 633</code></pre>
-<p>Then I identify latitude and longitude for the center point of each stat area, so that I can plot the locations in a map. These coordinates do not indicate the actual fishing locations, but rather are the centerpoint derived from the map of stat areas available at the GARFO website: <a href="https://www.fisheries.noaa.gov/resource/map/greater-atlantic-region-statistical-areas" class="uri">https://www.fisheries.noaa.gov/resource/map/greater-atlantic-region-statistical-areas</a>.</p>
-<p>Note, that I substituted zeros for the stat areas 0 and 600, so that I can keep those mixed areas for tallying the number of measurements. These can later be removed for analyses depending on the question at hand.</p>
+<pre class="r"><code>## -- Notes from Thomas about area codes -- ## 
+# AREA_CODE == 000 is all stat areas. 
+# The 600 series are AREA_CODE identified from 601 to 699. 
+# At this point in time AREA_CODE = 639 is the largest. 
+# The micro level series end in tenths. 
+# Example #1:  610, 620 630, ect. 
+# Example #2: The 610 series is comprised of stat areas 611:619.</code></pre>
+<p>Next, I identify latitude and longitude for the center point of each stat area, so that I can plot the locations in a map. These coordinates do not indicate the actual fishing locations, but rather are the centerpoint derived from the map of statistical areas available at the GARFO website: <a href="https://www.fisheries.noaa.gov/resource/map/greater-atlantic-region-statistical-areas" class="uri">https://www.fisheries.noaa.gov/resource/map/greater-atlantic-region-statistical-areas</a>.</p>
 <pre class="r"><code># Generate a dataframe that pairs a lat lon with each stat area code. This is 
 # roughly the centroid of that polygon. I did this manually by looking at the 
 # GARFO map but there is likely a more sophisticated way to do this with a 
@@ -306,6 +313,11 @@ stat_areas &lt;- data.frame(area_code = sort(unique(lw_data$AREA_CODE)),
                                  -66.75, 0, 0, -73.5,-72.35, 0, -74.5,
                                  -73.5, -72.5, -71.0,-74.5,
                                  -75.25, -74.5, -73.5))
+
+
+# Note, that I substituted zeros for the stat areas 0 and 600, so that I can keep
+# those mixed areas for tallying the number of measurements. These can later be 
+# removed for analyses depending on the question at hand. 
 
 lw_tally_full &lt;- lw_data %&gt;% 
   group_by(AREA_CODE) %&gt;%
@@ -353,11 +365,20 @@ wt_21 &lt;- wt_full %&gt;%
   filter(year == 2021) 
 wt_22 &lt;- wt_full %&gt;%
   filter(year == 2022) </code></pre>
+<p>Stat areas listed as 000 or 600 represent mixed areas. The analyses below do not include any mixed area data entries. Thomas and I are currently developing a protocol for including these data going forward.</p>
+<p>Quick list of the number of individual squid measured in each of these mixed area codes</p>
+<ul>
+<li><p>There are currently <strong>2542</strong> data entries from mixed area 00</p></li>
+<li><p>There are currently <strong>4038</strong> data entries from mixed area 500</p></li>
+<li><p>There are currently <strong>19857</strong> data entries from mixed area 600</p></li>
+<li><p>There are currently <strong>307</strong> data entries from mixed area 610</p></li>
+<li><p>There are currently <strong>23987</strong> data entries from mixed area 620</p></li>
+</ul>
 </div>
 <div id="data-visualization" class="section level2">
 <h2>Data visualization</h2>
 <hr />
-<p>This data set has 196452 data entries, from 15 different stat areas. The number of of squid measured at each site are shown below for each year:</p>
+<p>The full data set has <strong>196452</strong> data entries, from <strong>15</strong> different stat areas. The number of squid measured at each site are shown below for each year:</p>
 <pre class="r"><code># ggplot(data = lw_tally, aes(x = factor(AREA_CODE), y = n)) +
 #   geom_bar(stat =&#39;identity&#39;, fill = &#39;seashell4&#39;, col = &#39;black&#39;) + 
 #   theme_classic() + 
@@ -394,16 +415,8 @@ canada.areas &lt;-rgdal::readOGR(wd,&#39;Canada&#39;, verbose = FALSE)
 proj4string(canada.areas) &lt;- CRS(&quot;+init=epsg:4326&quot;)
 canyons &lt;- rgdal::readOGR(wd, &#39;major_canyons&#39;, verbose = FALSE)
 #proj4string(canyons) &lt;- CRS(&quot;+init=epsg:4326&quot;)
-canyons &lt;- st_read(&quot;~/github/ssalois1/NEFSC-illex_indicator_viewer/shapefiles/major_canyons.shp&quot;) %&gt;% st_transform(., &quot;+proj=longlat +datum=NAD83 +no_defs&quot;)</code></pre>
-<pre><code>## Reading layer `major_canyons&#39; from data source 
-##   `C:\Users\sarah.salois\Documents\github\ssalois1\NEFSC-illex_indicator_viewer\shapefiles\major_canyons.shp&#39; 
-##   using driver `ESRI Shapefile&#39;
-## Simple feature collection with 46 features and 4 fields
-## Geometry type: POLYGON
-## Dimension:     XY
-## Bounding box:  xmin: 521371.4 ymin: 4091126 xmax: 1231452 ymax: 4587440
-## Projected CRS: NAD83 / UTM zone 18N</code></pre>
-<pre class="r"><code>## -- Extra reference points you may want to add to map -- ##
+# canyons &lt;- st_read(&quot;~/github/ssalois1/NEFSC-illex_indicator_viewer/shapefiles/major_canyons.shp&quot;) %&gt;% st_transform(., &quot;+proj=longlat +datum=NAD83 +no_defs&quot;)
+## -- Extra reference points you may want to add to map -- ##
 # mesh_exmp &lt;- rgdal::readOGR(wd, &#39;Illex_Fishery_Mesh_Exemption_Area&#39;)
 # lobster &lt;- rgdal::readOGR(wd, &#39;Lobster_Restricted_Gear_Areas&#39;)
 # fishing &lt;- marmap::getNOAA.bathy(-80,-66, 36, 41,resolution=1)
@@ -607,7 +620,7 @@ p &lt;- ggboxplot(dat_wt,x = colnames(dat_wt[12]), y = colnames(dat_wt[6]),
 <div id="section" class="section level2">
 <h2>2021</h2>
 <hr />
-<p>In 2021 there were a total of <strong>114130</strong> organisms measured across <em>9</em> statistical areas.</p>
+<p>In 2021 there were a total of <strong>114130</strong> organisms measured across <strong>9</strong> statistical areas.</p>
 <pre class="r"><code>ggplot(data = lw_tally %&gt;% filter(year==2021), 
        aes(x = factor(AREA_CODE), y = n)) +
   geom_bar(stat =&#39;identity&#39;, fill = &#39;gold1&#39;, col = &#39;black&#39;) + 
