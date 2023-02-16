@@ -742,6 +742,8 @@ ggplot(wt_full %&gt;% filter(year == 2023), aes(x = weight, y = factor(week),
 </div>
 <div id="merging-all-weight-data" class="section level2">
 <h2>Merging all weight data</h2>
+<p>Below is the code used to merged the body weight data from Lisa Hendrickson with the ILXSM data.</p>
+<p>Boxplots showing weight data from 1997 to 2023:</p>
 <pre class="r"><code>setwd(here::here(&#39;data&#39;))
 bw &lt;- read.csv(&#39;illex_bodywts.csv&#39;)
 bw$DATE &lt;- as.Date(bw$DATE)
