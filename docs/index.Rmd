@@ -35,7 +35,7 @@ output: html_document
    
 
  
- <a href="https://ssalois1.github.io/preliminary_results/plot_lengths_in_space.html" target="_blank"> Plotting longfin fine-scale data - last updated Nov 5 2023 </a>
+ <a href="https://ssalois1.github.io/preliminary_results/plot_squibs_in_space.html" target="_blank"> Plotting longfin fine-scale data - last updated Nov 5 2023 </a>
 
 
 
