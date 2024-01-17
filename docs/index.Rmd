@@ -40,5 +40,6 @@ output: html_document
  <a href="https://ssalois1.github.io/preliminary_results/squib_update_example.html" target="_blank"> Example for SQUIBS updates - last updated Jan 16 2024 </a>
 
 
+ <a href="https://ssalois1.github.io/preliminary_results/netcdf_to_raster_tutorial_terra.html" target="_blank"> NetCDF to raster - last updated Jan 16 2024 </a>
 
   
