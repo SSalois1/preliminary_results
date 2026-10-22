@@ -1625,12 +1625,16 @@ sq_rast_temp   &lt;- (diff_rast)^2    # rmse mean of sqrt
 
 mae_values  &lt;- terra::global(abs_rast_temp, fun = &quot;mean&quot;, na.rm = TRUE)
 rmse_values &lt;- terra::global(sq_rast_temp, fun = &quot;mean&quot;, na.rm = TRUE)
-
+mean_values &lt;- terra::global(diff_rast, fun = &#39;mean&#39;, na.rm = TRUE)
+valid_cells &lt;- terra::global(!is.na(diff_rast), fun=&quot;sum&quot;)
+ 
 daily_stats &lt;- data.frame(
   Layer_Index = 1:terra::nlyr(temp_stack_20m), # Keeps track of which layer
   Day         = names(temp_stack_20m),
+  ME          = mean_values[, 1],
   MAE         = mae_values[, 1],
-  RMSE        = sqrt(rmse_values[, 1])
+  RMSE        = sqrt(rmse_values[, 1]), 
+  Valid       = valid_cells[,1]
 )
 
 # Salinity 
@@ -1641,12 +1645,16 @@ sq_rast_sal   &lt;- (diff_rast_sal)^2    # rmse mean of sqrt
 
 mae_values_sal  &lt;- terra::global(abs_rast_sal, fun = &quot;mean&quot;, na.rm = TRUE)
 rmse_values_sal &lt;- terra::global(sq_rast_sal, fun = &quot;mean&quot;, na.rm = TRUE)
+mean_values_sal &lt;- terra::global(diff_rast_sal, fun = &#39;mean&#39;, na.rm = TRUE)
+valid_cells &lt;- terra::global(!is.na(diff_rast_sal), fun=&quot;sum&quot;)
 
 daily_stats_sal &lt;- data.frame(
   Layer_Index = 1:terra::nlyr(sal_stack_20m), # Keeps track of which layer to plot
   Day         = names(sal_stack_20m),
+  ME          = mean_values_sal[, 1],
   MAE         = mae_values_sal[, 1],
-  RMSE        = sqrt(rmse_values_sal[, 1])
+  RMSE        = sqrt(rmse_values_sal[, 1]), 
+  Valid       = valid_cells[,1]
 )</code></pre>
 </div>
 <div id="temperature" class="section level3">
@@ -1667,17 +1675,17 @@ top_50_error_days &lt;- top_50_error_days |&gt;
 # length(sort(unique(top_50_error_days$Year)))
 # length(sort(unique(top_50_error_days$Month)))
 top_error_days      </code></pre>
-<pre><code>##      Layer_Index        Day       MAE      RMSE
-## 6061        6061 2020-07-19 0.3246806 1.3998579
-## 2247        2247 2009-08-25 0.3163158 0.9749508
-## 3491        3491 2013-07-05 0.3338355 0.9297079
-## 6063        6063 2020-07-21 0.1285315 0.6985113
-## 154          154 2000-10-05 0.1641176 0.6766744
-## 5938        5938 2020-03-18 0.1271983 0.6359915
-## 4622        4622 2016-08-10 0.1112061 0.5059362
-## 6054        6054 2020-07-12 0.1021345 0.4626428
-## 5700        5700 2019-07-24 0.1088653 0.4343540
-## 3252        3252 2012-09-01 0.1057233 0.4300712</code></pre>
+<pre><code>##      Layer_Index        Day          ME       MAE      RMSE Valid
+## 6061        6061 2020-07-19  0.27088447 0.3246806 1.3998579    22
+## 2247        2247 2009-08-25  0.31631580 0.3163158 0.9749508    19
+## 3491        3491 2013-07-05  0.33026568 0.3338355 0.9297079    24
+## 6063        6063 2020-07-21  0.12234660 0.1285315 0.6985113    31
+## 154          154 2000-10-05 -0.16411764 0.1641176 0.6766744    17
+## 5938        5938 2020-03-18 -0.12719830 0.1271983 0.6359915    25
+## 4622        4622 2016-08-10 -0.10959811 0.1112061 0.5059362    21
+## 6054        6054 2020-07-12  0.09505491 0.1021345 0.4626428    22
+## 5700        5700 2019-07-24  0.10235139 0.1088653 0.4343540    28
+## 3252        3252 2012-09-01 -0.09693374 0.1057233 0.4300712    18</code></pre>
 <ul>
 <li>Years represented: N = 19</li>
 <li>Months represented: N = 12</li>
@@ -1728,17 +1736,17 @@ top_50_error_days_sal &lt;- top_50_error_days_sal |&gt;
 # length(sort(unique(top_50_error_days_sal$Year)))
 # length(sort(unique(top_50_error_days_sal$Month)))
 top_error_days_sal</code></pre>
-<pre><code>##      Layer_Index        Day       MAE      RMSE
-## 6061        6061 2020-07-19 0.3246806 1.3998579
-## 2247        2247 2009-08-25 0.3163158 0.9749508
-## 3491        3491 2013-07-05 0.3338355 0.9297079
-## 6063        6063 2020-07-21 0.1285315 0.6985113
-## 154          154 2000-10-05 0.1641176 0.6766744
-## 5938        5938 2020-03-18 0.1271983 0.6359915
-## 4622        4622 2016-08-10 0.1112061 0.5059362
-## 6054        6054 2020-07-12 0.1021345 0.4626428
-## 5700        5700 2019-07-24 0.1088653 0.4343540
-## 3252        3252 2012-09-01 0.1057233 0.4300712</code></pre>
+<pre><code>##      Layer_Index        Day          ME       MAE      RMSE Valid
+## 6061        6061 2020-07-19  0.27088447 0.3246806 1.3998579    22
+## 2247        2247 2009-08-25  0.31631580 0.3163158 0.9749508    19
+## 3491        3491 2013-07-05  0.33026568 0.3338355 0.9297079    24
+## 6063        6063 2020-07-21  0.12234660 0.1285315 0.6985113    31
+## 154          154 2000-10-05 -0.16411764 0.1641176 0.6766744    17
+## 5938        5938 2020-03-18 -0.12719830 0.1271983 0.6359915    25
+## 4622        4622 2016-08-10 -0.10959811 0.1112061 0.5059362    21
+## 6054        6054 2020-07-12  0.09505491 0.1021345 0.4626428    22
+## 5700        5700 2019-07-24  0.10235139 0.1088653 0.4343540    28
+## 3252        3252 2012-09-01 -0.09693374 0.1057233 0.4300712    18</code></pre>
 <ul>
 <li>Years represented: N = 0</li>
 <li>Months represented: N = 0</li>
